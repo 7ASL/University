@@ -1,10 +1,10 @@
 #include "RFIDScanner.h"
 
-class Lock {
+class LockManager {
     private:
         RFIDScanner scanner;
 
     public:
-        Lock(RFIDScanner scanner) : scanner(scanner) {};
+        LockManager();
 
 };
