@@ -4,6 +4,7 @@
 
 #include "RFIDScanner.h"
 #include "LockManager.h"
+#include "AccessVerifier.h"
 
 #define PN532_SCK  (18)
 #define PN532_MISO (19)
@@ -15,6 +16,7 @@ class  AccessControlSystem {
         Adafruit_PN532 nfc;
         RFIDScanner scanner;
         LockManager lock;
+        AccessVerifier verifier;
     public:
         AccessControlSystem() : 
             nfc(PN532_SCK, PN532_MISO, PN532_MOSI, PN532_SS),
@@ -39,8 +41,8 @@ class  AccessControlSystem {
                     Serial.print(" 0x"); Serial.print(uid[i], HEX);
                 }
 
-                if ( 0 == 0) {
-                    lock.open();
+                if (verifier.isAuthorized(uid, length)) {
+                    lock.open();    
                 } else {
                     // Access denied
                 }
