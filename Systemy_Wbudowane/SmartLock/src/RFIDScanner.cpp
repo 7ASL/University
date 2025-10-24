@@ -1,5 +1,3 @@
-#pragma once
-
 #include "RFIDScanner.h"
 
 void RFIDScanner::begin() {
