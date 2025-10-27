@@ -2,22 +2,20 @@
 
 LockManager::LockManager(unsigned long pin, unsigned long openDuration, unsigned long cooldownDuration) :
             lockPin(pin),
-            openDuration(openDuration),
-            cooldownDuration(cooldownDuration),
-            isOpen(false),
-            onCooldown(false),
-            unlockStart(0),
-            cooldownStart(0)
-            {};
+            openTimer(openDuration),
+            cooldown(cooldownDuration),
+            isOpen(false)
+            {}
             
 void LockManager::setup() {
     pinMode(lockPin, OUTPUT);
+    lock();
 }
 
 void LockManager::unlock() {
     digitalWrite(lockPin, HIGH);
     isOpen = true;
-    unlockStart = millis();
+    openTimer.start();
 }
 
 void LockManager::lock() {
@@ -25,29 +23,20 @@ void LockManager::lock() {
     isOpen = false;
 }
 
-void LockManager::startCooldown() {
-    onCooldown = true;
-    cooldownStart = millis();
-}
-
 void LockManager::open() {
 unsigned long now = millis();
 
-    if (!isOpen && !onCooldown) {
+    if (!isOpen && !cooldown.isCooling()) {
         unlock();
     }
 }
 
 void LockManager::update() {
-    unsigned long currentTime = millis();
-    if (isOpen) {
-        if (currentTime - unlockStart >= openDuration) {
-            lock();
-            startCooldown();
-        }
-    } else if (onCooldown) {
-        if (currentTime - cooldownStart >= cooldownDuration) {
-            onCooldown = false;
-        }
+    if (isOpen && openTimer.expired()) {
+        lock();
+        openTimer.stop();
+        cooldown.start();
+    } else if (!isOpen && cooldown.expired()) {
+        cooldown.stop();
     }
 }

@@ -6,7 +6,7 @@ void AccessVerifier::begin() {
 
 bool AccessVerifier::isAuthorized(uint8_t* uid, uint8_t length) {
     // Tymczasowa implementacja: porównuje UID z jedną autoryzowaną wartością.
-    const uint8_t authorizedUid[] = { 0xDE, 0xAD, 0xBE, 0xEF };
+    const uint8_t authorizedUid[] = { 0x9D, 0xE1, 0x73, 0x6 };
     const uint8_t authorizedLength = sizeof(authorizedUid) / sizeof(authorizedUid[0]);
 
     if (length != authorizedLength) {

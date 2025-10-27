@@ -12,14 +12,19 @@ void RFIDScanner::begin() {
 }
 
 bool RFIDScanner::scan() {
-    bool success = nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, uidBuffer, &uidLength);
-
-    if (success) {
-        return true;
-    } else {
-        uidLength = 0;
+    if(cooldown.isCooling()) {
         return false;
     }
+
+    bool success = nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, uidBuffer, &uidLength);
+
+    if (success && uidLength > 0) {
+        cooldown.start();
+        return true;
+    }
+
+    uidLength = 0;
+    return false;
 }
 
 uint8_t* RFIDScanner::getUidBytes(uint8_t &length) {

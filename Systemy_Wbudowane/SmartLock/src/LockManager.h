@@ -2,20 +2,18 @@
 
 #include <Arduino.h>
 
+#include "Cooldown.h"
+
 class LockManager {
     private:
         unsigned long lockPin;
-        unsigned long openDuration;
-        unsigned long cooldownDuration;
+        Cooldown openTimer;
+        Cooldown cooldown;
 
         bool isOpen;
-        bool onCooldown;
-        unsigned long unlockStart;
-        unsigned long cooldownStart;
 
         void unlock();
         void lock();
-        void startCooldown();
 
     public:
         LockManager(unsigned long pin, unsigned long openDuration, unsigned long cooldownDuration);

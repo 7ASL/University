@@ -20,7 +20,7 @@ class  AccessControlSystem {
     public:
         AccessControlSystem() : 
             nfc(PN532_SCK, PN532_MISO, PN532_MOSI, PN532_SS),
-            scanner(nfc),
+            scanner(nfc, 1000),
             lock(32, 5000, 10000)
             {};
 
@@ -35,16 +35,17 @@ class  AccessControlSystem {
                 uint8_t length;
                 uint8_t* uid = scanner.getUidBytes(length);
 
-                Serial.print("UID Length: "); Serial.println(length);
+                Serial.print(" UID Length: "); Serial.println(length);
                 Serial.print("UID Value: ");
                 for (uint8_t i = 0; i < length; i++) {
                     Serial.print(" 0x"); Serial.print(uid[i], HEX);
                 }
 
                 if (verifier.isAuthorized(uid, length)) {
-                    lock.open();    
+                    //lock.open();
+                    Serial.println(" - Access granted");    
                 } else {
-                    // Access denied
+                    Serial.println(" - Access denied");
                 }
 
             }
