@@ -20,5 +20,6 @@ class LockManager {
         void setup();
         void open();
         void update();
+        bool onCooldown();
 
 };

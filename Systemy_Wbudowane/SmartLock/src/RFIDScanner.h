@@ -17,6 +17,7 @@ class RFIDScanner {
         unsigned long cooldownStart;
 
 
+
     public:
         RFIDScanner(Adafruit_PN532 &nfc, unsigned long cooldownDuration) : nfc(nfc), cooldown(cooldownDuration), uidLength(0) {}
         void begin();

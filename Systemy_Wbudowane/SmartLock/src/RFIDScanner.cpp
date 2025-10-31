@@ -5,10 +5,12 @@ void RFIDScanner::begin() {
     uint32_t versiondata = nfc.getFirmwareVersion();
     if (!versiondata) {
     Serial.print("Didn't find PN53x board");
-            while (1); // Stop program execution
+            // while (1); // Stop program execution
     }
     Serial.print("Found chip PN5"); Serial.println((versiondata >> 24) & 0xFF, HEX);
     nfc.SAMConfig();
+
+    nfc.setPassiveActivationRetries(1);
 }
 
 bool RFIDScanner::scan() {
