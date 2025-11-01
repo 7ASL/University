@@ -43,11 +43,17 @@ class  AccessControlSystem {
                     Serial.print(" 0x"); Serial.print(uid[i], HEX);
                 }
 
-                if (verifier.isAuthorized(uid, length)) {
+                String status = verifier.checkStatus(uid, length);
+
+                if (status == "master") {
                     lock.open();
-                    Serial.println(" - Access granted");    
+                    // Future Master Card Functions
+                    // Serial.println(" - Master card detected");
+                } else if (status == "user") {
+                    lock.open();
+                    // Serial.println(" - Access granted");    
                 } else {
-                    Serial.println(" - Access denied");
+                    // Serial.println(" - Access denied");
                 }
 
             }
