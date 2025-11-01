@@ -42,7 +42,7 @@ unsigned long now = millis();
 }
 
 void LockManager::update() {
-    Serial.println(openTimer.remaining());
+    // Serial.println(openTimer.remaining());
     if (openTimer.expired()) {
         Serial.println("[LockManager] update: openTimer expired -> locking and starting cooldown");
         lock();
