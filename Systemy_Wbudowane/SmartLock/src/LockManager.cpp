@@ -28,8 +28,6 @@ void LockManager::lock() {
 }
 
 void LockManager::open() {
-unsigned long now = millis();
-
     if (!isOpen && !cooldown.isCooling()) {
         Serial.println("[LockManager] open() -> allowed, calling unlock()");
         unlock();
@@ -42,13 +40,14 @@ unsigned long now = millis();
 }
 
 void LockManager::update() {
-    // Serial.println(openTimer.remaining());
-    if (openTimer.expired()) {
+    if (openTimer.isRunning() && openTimer.expired()) {
         Serial.println("[LockManager] update: openTimer expired -> locking and starting cooldown");
         lock();
         openTimer.stop();
         cooldown.start();
-    } else if (cooldown.expired()) {
+    }
+    
+    if (cooldown.isRunning() && cooldown.expired()) {
         Serial.println("[LockManager] update: cooldown expired -> stopping cooldown");
         cooldown.stop();
     }

@@ -4,6 +4,7 @@
 
 #include "Cooldown.h"
 
+// Manages electronic lock state with timed open/close and cooldown periods
 class LockManager {
     private:
         unsigned long lockPin;

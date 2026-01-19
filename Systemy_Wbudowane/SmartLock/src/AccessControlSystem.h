@@ -11,28 +11,36 @@
 #define PN532_MOSI (23)
 #define PN532_SS   (5)
 
-class  AccessControlSystem {
+// Main access control system that coordinates RFID scanning, lock control, and verification
+class AccessControlSystem {
     private:
         Adafruit_PN532 nfc;
         RFIDScanner scanner;
         LockManager lock;
         AccessVerifier verifier;
+
+        String note;
     public:
         AccessControlSystem() : 
             nfc(PN532_SCK, PN532_MISO, PN532_MOSI, PN532_SS),
             scanner(nfc, 1000),
-            lock(32, 2500, 2500)
+            lock(32, 2500, 1000)
             {};
 
         void setup() {
             lock.setup();
             scanner.begin();
+            verifier.begin();
             Serial.println("[LockManager] setup -> locked");
-
         }
 
         void loop() {
             lock.update();
+            
+            if (!lock.onCooldown()) {
+                verifier.update();
+            }
+            
             if(scanner.scan() && !lock.onCooldown()) {
                 uint8_t length;
                 uint8_t* uid = scanner.getUidBytes(length);
@@ -43,18 +51,17 @@ class  AccessControlSystem {
                     Serial.print(" 0x"); Serial.print(uid[i], HEX);
                 }
 
-                String status = verifier.checkStatus(uid, length);
+                bool status = verifier.isAuthorized(uid, length);
 
-                if (status == "master") {
+                if (status) {
                     lock.open();
-                    // Future Master Card Functions
-                    // Serial.println(" - Master card detected");
-                } else if (status == "user") {
-                    lock.open();
-                    // Serial.println(" - Access granted");    
+                    note = "Access granted";
                 } else {
-                    // Serial.println(" - Access denied");
+                    note = "Access denied";
                 }
+                
+                // Queue log (non-blocking) - happens after lock state is set
+                verifier.logScanToServer(verifier.bytesToHexString(uid, length), status, note);
 
             }
         }

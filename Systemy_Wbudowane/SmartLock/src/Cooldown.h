@@ -2,6 +2,7 @@
 
 #include <Arduino.h>
 
+// Timer utility for managing cooldown and duration-based operations
 class Cooldown {
     private:
         unsigned long duration_ms;

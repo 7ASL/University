@@ -4,7 +4,7 @@
 
 #include "Cooldown.h"
 
-
+// RFID card scanner with cooldown to prevent duplicate reads
 class RFIDScanner {
     private:
         Adafruit_PN532 &nfc;
@@ -12,11 +12,6 @@ class RFIDScanner {
         
         uint8_t uidBuffer[7];
         uint8_t uidLength;
-
-        boolean onCooldown;
-        unsigned long cooldownStart;
-
-
 
     public:
         RFIDScanner(Adafruit_PN532 &nfc, unsigned long cooldownDuration) : nfc(nfc), cooldown(cooldownDuration), uidLength(0) {}
