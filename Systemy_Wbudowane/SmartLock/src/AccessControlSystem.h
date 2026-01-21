@@ -24,7 +24,7 @@ class AccessControlSystem {
         AccessControlSystem() : 
             nfc(PN532_SCK, PN532_MISO, PN532_MOSI, PN532_SS),
             scanner(nfc, 1000),
-            lock(32, 2500, 1000)
+            lock(32, 2500, 2500)
             {};
 
         void setup() {

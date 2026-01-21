@@ -18,10 +18,10 @@ void AccessVerifier::update() {
         Serial.println("Refreshing tags cache...");
         if (fetchPermittedTags()) {
             Serial.println("Refreshed " + String(tagCount) + " tags.");
+            refreshCooldown.start();
         } else {
             Serial.println("Refresh failed, keeping old cache.");
         }
-        refreshCooldown.start();
     }
 }
 
@@ -53,6 +53,7 @@ bool AccessVerifier::fetchPermittedTags() {
 
     JsonDocument doc;  // ← Zmienione z StaticJsonDocument<4096>
     DeserializationError error = deserializeJson(doc, payload);
+    
     if (error) {
         Serial.println("JSON parse error: " + String(error.c_str()));
         return false;

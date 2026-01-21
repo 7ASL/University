@@ -30,7 +30,7 @@ private:
     bool sendLogToServer();
 
 public:
-    AccessVerifier() : refreshCooldown(5 * 60 * 1000UL), logCooldown(2000) {}
+    AccessVerifier() : refreshCooldown(1 * 15 * 1000UL), logCooldown(2000) {}
     String bytesToHexString(uint8_t* uid, uint8_t length);
     void begin();
     void update();
